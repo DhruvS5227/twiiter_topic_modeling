@@ -3,7 +3,6 @@
 
 # In[1]:
 
-
 import tweepy
 import pandas as pd
 import re
@@ -12,11 +11,11 @@ import spacy
 
 # In[2]:
 
-
-consumer_key = "ho2tPaRaYSyQsFpA8tx82evZU"
-consumer_secret = "EQkcU19GTKAZ66J3yCLmnGE1aUQNnEMEkUK5y1SXRObMePpSYB"
-access_token = "1399618413262106624-fCJCuarQik1HX8eXGhMAy9pbCKTvdc"
-access_token_secret = "TFaPhwkccwre3eAUUW3d7XIZ1S3seYcA1PKDxpqRdGVdi"
+#your user credentials
+consumer_key = "#consumer_key"
+consumer_secret = "#consumer_secret"
+access_token = "#access_token"
+access_token_secret = "#access_token_secret"
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
@@ -25,9 +24,9 @@ api = tweepy.API(auth, wait_on_rate_limit = True)
 
 # In[3]:
 
-
+#create a dataframe
 df=[]
-posts= tweepy.Cursor(api.user_timeline,id="LGUS",tweet_mode="extended").items(1000)
+posts= tweepy.Cursor(api.user_timeline,id="#username",tweet_mode="extended").items(n) # n= number of tweets to be extracted
 for i in posts:
     df.append([i.full_text,i.favorite_count,i.created_at])
 
@@ -37,7 +36,7 @@ df
 
 # In[4]:
 
-
+#cleaning of the extrected data
 import string
 def clean_text(text):
     ''' , and '''
@@ -53,13 +52,13 @@ tweets_df_clean
 
 # In[5]:
 
-
+#import spacy.load
 nlp = spacy.load("en_core_web_lg")
 
 
 # In[6]:
 
-
+#lemmatization of data
 def lemmatizer(text):        
     sent = []
     doc = nlp(text)
@@ -72,7 +71,7 @@ tweets_df_clean['tweets']
 
 
 # In[7]:
-
+#distribution od tweets chatracter length
 
 import matplotlib.pyplot as plt
 get_ipython().run_line_magic('matplotlib', 'inline')
@@ -87,7 +86,7 @@ sns.despine();
 
 
 # In[8]:
-
+#wordcloud 
 
 import matplotlib as mpl
 from subprocess import check_output
@@ -113,7 +112,7 @@ plt.show();
 
 
 # In[9]:
-
+#unigram of tweets
 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 def get_top_n_words(corpus, n=None):
@@ -128,8 +127,6 @@ common_words = get_top_n_words(tweets_df_clean.tweets, 10)
 unigram = pd.DataFrame(common_words, columns = ['unigram' , 'count'])
 unigram
 
-
-# In[26]:
 
 
 # topic modelling
@@ -164,7 +161,7 @@ lda_output = lda_model.fit_transform(data_matrix)
 
 
 # In[13]:
-
+# top 10 words from the tweets
 
 for i,topic in enumerate(lda_model.components_):
     print(f'Top 10 words for topic #{i}:')
@@ -173,15 +170,13 @@ for i,topic in enumerate(lda_model.components_):
 
 
 # In[14]:
-
+#applying LDA
 
 import pyLDAvis
 import pyLDAvis.sklearn
 pyLDAvis.enable_notebook()
 pyLDAvis.sklearn.prepare(lda_model, data_matrix, vectorizer, mds='tsne')
 
-
-# In[ ]:
 
 
 
